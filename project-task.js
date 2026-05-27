@@ -27,14 +27,14 @@ and the program continues running as intended.
 
 
 // Will need to import / install readline-sync if not done so already within project dir: npm install readline-sync 
-const readlineSync = require('readline-sync'); // Error: Cannot find module 'readline-sync'
+const readlineSync = require('readline-sync');
 
 // Initial Code with Bugs (modified to use readline-sync)
 let animals = [];
 let fees = [];
 function addAnimal(name, fee) {
-    if (!name || fee < 0) {
-        throw new Error("Invalid animal name or adoption fee!");
+    if (!name || fee < 0) {          // validation for input
+        throw new Error("Invalid animal name or adoption fee!"); 
     }
     animals.push(name);
     fees.push(fee);
