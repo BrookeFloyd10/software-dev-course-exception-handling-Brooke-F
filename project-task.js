@@ -27,7 +27,7 @@ and the program continues running as intended.
 
 
 // Will need to import / install readline-sync if not done so already within project dir: npm install readline-sync 
-const readlineSync = require('readline-sync');
+const readlineSync = require('readline-sync'); // Error: Cannot find module 'readline-sync'
 
 // Initial Code with Bugs (modified to use readline-sync)
 let animals = [];
