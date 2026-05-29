@@ -17,6 +17,9 @@ Instructions
 Start by Understanding the Errors:
 Run the program and observe the exceptions that occur. Document what the exceptions are and where they happen.
 
+
+
+
 Write Exception Handling Code:
 Use try/catch blocks to handle the errors so the program doesn’t crash when incorrect input or unexpected situations occur.
 
@@ -26,59 +29,94 @@ and the program continues running as intended.
 */
 
 
-// Will need to import / install readline-sync if not done so already within project dir: npm install readline-sync 
-const readlineSync = require('readline-sync');
+// Will need to import / install readline-sync if not done so already within project dir: npm install readline-sync
+const readlineSync = require("readline-sync");
 
 // Initial Code with Bugs (modified to use readline-sync)
 let animals = [];
 let fees = [];
 function addAnimal(name, fee) {
-    if (!name || fee < 0) {          // validation for input
-        throw new Error("Invalid animal name or adoption fee!"); 
+    //added try catch 
+  try {
+    if (!name) {
+      throw new ReferenceError(
+        "Invalid animal name.\nPlease enter a valid name.");
     }
-    animals.push(name);
-    fees.push(fee);
+    if (Number.isNaN(fee) || fee <= 0) { // added additional type validation
+      throw new TypeError(
+        "Invalid input.\nAdoption fee must be a positive number!");
+    } else {
+        animals.push(name);
+        fees.push(fee);
+        console.log(`${name} added with a fee of $${fee}.`);
+    }
+  } catch (err) {
+    console.error(`Found ${err.name}: ${err.message}`);
+    console.log("Animal could not be added.");
+    return;
+  }
 }
+
 function getAdoptionFee(animalName) {
-    let index = animals.indexOf(animalName);
+  let index = animals.indexOf(animalName);
+  // added try catch 
+  try {
     if (index === -1) {
-        throw new Error("Animal not found in records!");
+      throw new ReferenceError("Animal not found in records!");
     }
-    return fees[index];
+    console.log(`${animalName}'s adoption fee is $${fees[index]}.`); // moved all handling logic here for consistency with my fix in addAnimal structure
+  } catch (err) {
+    console.error(`Found ${err.name}: ${err.message}`);
+  }
 }
-// Main program
+
+// Main program // added additional input validation
 console.log("Welcome to the Pet Shelter System");
 while (true) {
-    let action = readlineSync.question("Choose an action: 'add', 'fee', or 'exit': ").toLowerCase();
-    if (action === "exit") {
-        console.log("Goodbye!");
-        break;
-    }
-    if (action === "add") {
-        let animal = readlineSync.question("Enter the animal's name: ");
-        let fee = Number(readlineSync.question("Enter the adoption fee: "));
-        addAnimal(animal, fee);
-        console.log(`${animal} added with a fee of $${fee}.`);
-    } else if (action === "fee") {
-        let animal = readlineSync.question("Enter the animal's name to find its adoption fee: ");
-        console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
-    } else {
-        console.log("Invalid action. Please choose 'add', 'fee', or 'exit'.");
-    }
+  let action = readlineSync
+    .question("Choose an action: 'add', 'fee', or 'exit': ")
+    .toLowerCase()
+    .trim();
+  if (action === "exit") {
+    console.log("Goodbye!");
+    break;
+  }
+  if (action === "add") {
+    let animal = readlineSync
+      .question("Enter the animal's name: ")
+      .toLowerCase()
+      .trim();
+    let fee = Number(readlineSync.question("Enter the adoption fee: "));
+    addAnimal(animal, fee);
+    // console.log(`${animal} added with a fee of $${fee}.`);
+  } else if (action === "fee") {
+    let animal = readlineSync.question("Enter the animal's name to find its adoption fee: ").toLowerCase().trim();
+    // console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
+    getAdoptionFee(animal);
+  } else {
+    console.log("Invalid action. Please choose 'add', 'fee', or 'exit'.");
+  }
 }
 
 
+// EXCEPTION DOCUMENTATION
+// program stops running if error is thrown
+// allows invalid input 
+// errors occur in the addAnimal and getAdoptionFee functions
 
-/*
-Problems to Solve
 
-Invalid Input Errors:
-  What happens if the user provides a negative adoption fee or leaves the name blank?
-  What happens if the user tries to find the fee for an animal that hasn’t been added?
+// /*
+// Problems to Solve
 
-Code Flow Problems:
-  What happens if the program throws an exception? Does the rest of the code continue running?
+// Invalid Input Errors:
+//   What happens if the user provides a negative adoption fee or leaves the name blank?
+//   What happens if the user tries to find the fee for an animal that hasn’t been added?
 
-Structured Exception Handling:
-  Add try/catch blocks to handle the above errors gracefully.
-*/
+// Code Flow Problems:
+//   What happens if the program throws an exception? Does the rest of the code continue running?
+
+// Structured Exception Handling:
+//   Add try/catch blocks to handle the above errors gracefully.
+// */
+
+
